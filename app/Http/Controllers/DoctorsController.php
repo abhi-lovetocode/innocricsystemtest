@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Response;
+use Validator;
+use App\Model\Specialization;
+use App\Model\Doctor;
+use App\Model\DoctorSpecialization;
 
 class DoctorsController extends Controller
 {
@@ -13,7 +19,8 @@ class DoctorsController extends Controller
      */
     public function index()
     {
-        //
+        $doctors = Doctor::get();
+        return view('doctors.index', compact('doctors'));
     }
 
     /**
@@ -23,7 +30,8 @@ class DoctorsController extends Controller
      */
     public function create()
     {
-        //
+        $slist = Specialization::get();
+        return view('doctors.create', compact('slist'));
     }
 
     /**
@@ -34,7 +42,31 @@ class DoctorsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+
+            'doctor_name' => 'required|string|max:255',
+            'specialization' => 'required|array',
+            ]);
+
+        if ($validator->passes()) {
+
+            $doctor = Doctor::create([
+                'doctor_name' => request('doctor_name')
+                ]);
+
+            $specialization = $request->input('specialization');
+
+            foreach ($specialization as $value) {
+                DoctorSpecialization::create([
+                    'doctor_id' => $doctor->id,
+                    's_id' => $value
+                    ]);
+            }
+
+            return response()->json(['code' => 201, 'message' => 'Doctore Added Successfully']);
+        }
+
+        return response()->json(['code' => 509, 'error' => $validator->getMessageBag()->toArray()]);
     }
 
     /**
@@ -45,7 +77,13 @@ class DoctorsController extends Controller
      */
     public function show($id)
     {
-        //
+        $record = Doctor::where('id',$id)->first();
+
+        $slist = Specialization::get();
+
+        $specializations = DoctorSpecialization::where('doctor_id',$id)->get();
+        
+        return view('doctors.edit', compact('record','slist','specializations'));
     }
 
     /**

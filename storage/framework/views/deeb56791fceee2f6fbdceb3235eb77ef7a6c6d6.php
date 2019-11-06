@@ -1,12 +1,11 @@
-@extends('layouts.master')
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
-		<h1>Specialization /<small>List</small></h1>
+		<h1>Doctors /<small>List</small></h1>
 	</section>
 
 	<!-- Main content -->
@@ -16,10 +15,10 @@
 				
 				<div class="box box-success">
 					<div class="box-header with-border">
-						<h3 class="box-title">Specialization List</h3>
+						<h3 class="box-title">Doctors List</h3>
 						<div style="float: right;">
 
-							<button type="button" class="btn btn-info" onclick="location.href='specialization/create'">Add New</button>
+							<button type="button" class="btn btn-info" onclick="location.href='doctors/create'">Add New</button>
 
 						</div>
 					</div><!-- /.box-header -->
@@ -31,19 +30,12 @@
 								<thead>
 									<tr>
 										<th>Id</th> 
-										<th>Specialization</th>
+										<th>Doctors</th>
 										<th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
-									@foreach ($slist as $element)
-									<tr>
-										<th>{{ $element->id }}</th> 
-										<th>{{ $element->specialization_name }}</th>
-										<th><button type="button" class="btn btn-info" onclick="location.href='specialization/{{ $element->id }}/edit'">Edit</button></th>
-									</tr>
-									@endforeach
-
+									
 								</tbody>
 							</table>
 						</div>
@@ -64,4 +56,5 @@
 
 </div><!-- /.content-wrapper -->
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Response;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Validator;
-use Illuminate\Validation\Rule;
+use App\Model\Specialization;
 
 class SpecializationController extends Controller
 {
@@ -21,7 +17,9 @@ class SpecializationController extends Controller
      */
     public function index()
     {
-        return view('specialization.index');
+        $slist = Specialization::get();
+
+        return view('specialization.index', compact('slist'));
     }
 
     /**
@@ -31,7 +29,7 @@ class SpecializationController extends Controller
      */
     public function create()
     {
-        //
+        return view('specialization.create');
     }
 
     /**
@@ -42,7 +40,21 @@ class SpecializationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+
+            'specialization_name' => 'required|string|max:255|unique:tbl_specialization',
+            ]);
+
+        if ($validator->passes()) {
+
+            Specialization::create([
+                'specialization_name' => request('specialization_name'),
+                ]);
+
+            return response()->json(['code' => 201, 'message' => 'Specilization Added Successfully']);
+        }
+
+        return response()->json(['code' => 509, 'error' => $validator->getMessageBag()->toArray()]);
     }
 
     /**
@@ -64,7 +76,9 @@ class SpecializationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $record = Specialization::where('id',$id)->first();
+        
+        return view('specialization.edit', compact('record'));
     }
 
     /**
@@ -76,7 +90,21 @@ class SpecializationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'specialization_name' => [ 'required','string','max:255', Rule::unique('tbl_specialization')->ignore($id)],
+            ]);
+
+        if ($validator->passes()) {
+
+            Specialization::where('id',$id)
+            ->update([
+                'specialization_name' => request('specialization_name'),
+                ]);
+
+            return response()->json(['code' => 201, 'message' => 'Specilization Updated Successfully']);
+        }
+
+        return response()->json(['code' => 509, 'error' => $validator->getMessageBag()->toArray()]);
     }
 
     /**

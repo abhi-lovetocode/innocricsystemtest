@@ -36,7 +36,7 @@
     <div class="small-box bg-green">
       <div class="inner">
         <h3>53<sup style="font-size: 20px">%</sup></h3>
-        <p>Candidate Literacy Rate</p>
+        <p>Literacy Rate</p>
     </div>
     <div class="icon">
         <i class="ion ion-stats-bars"></i>
